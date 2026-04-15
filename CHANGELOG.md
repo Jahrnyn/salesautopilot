@@ -24,3 +24,6 @@
 - What changed: added a minimal PHPUnit-based test setup with focused service-level checks for list and subscriber happy paths plus the required mock-backed invalid-credentials, empty-list, timeout, and rate-limit scenarios.
 - Why: introduce a small deterministic automated verification layer without adding a broad testing framework or browser-level setup.
 - Verified: test configuration and bootstrap were added for local execution, and the Docker Compose configuration remains valid.
+- What changed: added a small shared CSS block and light template markup polish to improve layout width, spacing, navigation, state visibility, and the readability of list/subscriber content.
+- Why: make the server-rendered UI easier to scan without changing application flow or introducing frontend complexity.
+- Verified: the presentation updates stay in the templates/layout only, and the Docker Compose configuration remains valid.
