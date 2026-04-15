@@ -8,6 +8,14 @@ $errorMessage = is_string($errorMessage ?? null) ? $errorMessage : null;
 ?>
 <h1>Lists</h1>
 <p>This page renders list data through the application service and SalesAutopilot client boundary.</p>
+<p>
+    Demo scenarios:
+    <a href="<?= htmlspecialchars(buildScenarioUrl('/lists'), ENT_QUOTES, 'UTF-8') ?>">Happy path</a>,
+    <a href="<?= htmlspecialchars(buildScenarioUrl('/lists', ['scenario' => 'invalid_credentials']), ENT_QUOTES, 'UTF-8') ?>">invalid credentials</a>,
+    <a href="<?= htmlspecialchars(buildScenarioUrl('/lists', ['scenario' => 'timeout']), ENT_QUOTES, 'UTF-8') ?>">timeout</a>,
+    <a href="<?= htmlspecialchars(buildScenarioUrl('/lists', ['scenario' => 'rate_limit']), ENT_QUOTES, 'UTF-8') ?>">rate limit</a>,
+    <a href="<?= htmlspecialchars(buildScenarioUrl('/subscribers', ['listId' => 'demo-list-3', 'scenario' => 'empty_list']), ENT_QUOTES, 'UTF-8') ?>">empty list</a>
+</p>
 <?php if ($errorMessage !== null): ?>
 <p><?= htmlspecialchars($errorMessage, ENT_QUOTES, 'UTF-8') ?></p>
 <?php elseif ($lists === []): ?>
@@ -24,7 +32,7 @@ $errorMessage = is_string($errorMessage ?? null) ? $errorMessage : null;
         <br>
         Created: <?= htmlspecialchars((string) ($list['createdAt'] ?? 'n/a'), ENT_QUOTES, 'UTF-8') ?>
         <br>
-        <a href="/subscribers?listId=<?= urlencode((string) ($list['id'] ?? '')) ?>">View subscribers</a>
+        <a href="<?= htmlspecialchars(buildScenarioUrl('/subscribers', ['listId' => (string) ($list['id'] ?? '')]), ENT_QUOTES, 'UTF-8') ?>">View subscribers</a>
     </li>
     <?php endforeach; ?>
 </ul>

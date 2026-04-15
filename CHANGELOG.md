@@ -18,3 +18,6 @@
 - What changed: wired `/subscribers` through a small application service, added deterministic mock subscriber data including an empty-list case, and added simple local subscriber sorting by name or email.
 - Why: complete the subscriber flow through the intended application path while keeping the feature demonstrable in mock mode and the sort logic in the application layer.
 - Verified: `/lists` links into `/subscribers`, the subscriber page now renders client-backed data or a simple empty/error state, and the Docker Compose configuration remains valid.
+- What changed: added a centralized mock scenario switch for invalid credentials, empty list, timeout-like failure, and rate-limit-like failure, and mapped those outcomes to short user-facing messages in the list and subscriber services.
+- Why: make every required exercise error scenario explicitly reproducible without breaking the happy path or exposing raw technical output.
+- Verified: the required scenarios are now selectable in mock mode, empty-list remains a non-error state, and the Docker Compose configuration remains valid.

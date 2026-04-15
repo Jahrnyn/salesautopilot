@@ -3,11 +3,19 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/SalesAutopilotClientInterface.php';
+require_once __DIR__ . '/Exceptions.php';
 
 class MockSalesAutopilotClient implements SalesAutopilotClientInterface
 {
+    public function __construct(
+        private readonly ?string $scenario = null,
+    ) {
+    }
+
     public function getLists(array $credentials = []): array
     {
+        $this->throwIfFailureScenarioIsActive();
+
         return [
             [
                 'id' => 'demo-list-1',
@@ -32,6 +40,8 @@ class MockSalesAutopilotClient implements SalesAutopilotClientInterface
 
     public function getSubscribers(array $credentials = [], string|int|null $listId = null, int $limit = 20): array
     {
+        $this->throwIfFailureScenarioIsActive();
+
         $subscribersByList = [
             'demo-list-1' => [
                 [
@@ -71,8 +81,23 @@ class MockSalesAutopilotClient implements SalesAutopilotClientInterface
         ];
 
         $resolvedListId = $listId === null || $listId === '' ? 'demo-list-1' : (string) $listId;
+
+        if ($this->scenario === 'empty_list') {
+            return [];
+        }
+
         $subscribers = $subscribersByList[$resolvedListId] ?? [];
 
         return array_slice($subscribers, 0, max(0, $limit));
+    }
+
+    private function throwIfFailureScenarioIsActive(): void
+    {
+        match ($this->scenario) {
+            'invalid_credentials' => throw new SalesAutopilotAuthenticationException('Invalid credentials.'),
+            'timeout' => throw new SalesAutopilotTimeoutException('The request timed out.'),
+            'rate_limit' => throw new SalesAutopilotRateLimitException('The request was rate limited.'),
+            default => null,
+        };
     }
 }

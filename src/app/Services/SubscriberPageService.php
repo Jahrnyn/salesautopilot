@@ -39,7 +39,7 @@ class SubscriberPageService
                 'selectedListId' => $listId,
                 'subscribers' => [],
                 'sortBy' => $this->normalizeSortBy($sortBy),
-                'errorMessage' => 'The subscriber data is currently unavailable. Please check the runtime configuration and try again.',
+                'errorMessage' => $this->mapErrorMessage($exception),
                 'emptyMessage' => null,
             ];
         }
@@ -63,5 +63,15 @@ class SubscriberPageService
         );
 
         return $subscribers;
+    }
+
+    private function mapErrorMessage(SalesAutopilotException $exception): string
+    {
+        return match (true) {
+            $exception instanceof SalesAutopilotAuthenticationException => 'The provided credentials are not valid.',
+            $exception instanceof SalesAutopilotTimeoutException => 'The SalesAutopilot request took too long. Please try again.',
+            $exception instanceof SalesAutopilotRateLimitException => 'Too many requests were sent. Please wait a moment and try again.',
+            default => 'The subscriber data is currently unavailable. Please check the runtime configuration and try again.',
+        };
     }
 }

@@ -11,10 +11,21 @@ $emptyMessage = is_string($emptyMessage ?? null) ? $emptyMessage : null;
 ?>
 <h1>Subscribers</h1>
 <p>This page renders subscriber data through the application service and SalesAutopilot client boundary.</p>
+<p>
+    Demo scenarios:
+    <a href="<?= htmlspecialchars(buildScenarioUrl('/subscribers', ['listId' => $selectedListId]), ENT_QUOTES, 'UTF-8') ?>">Happy path</a>,
+    <a href="<?= htmlspecialchars(buildScenarioUrl('/subscribers', ['listId' => $selectedListId, 'scenario' => 'invalid_credentials']), ENT_QUOTES, 'UTF-8') ?>">invalid credentials</a>,
+    <a href="<?= htmlspecialchars(buildScenarioUrl('/subscribers', ['listId' => $selectedListId, 'scenario' => 'timeout']), ENT_QUOTES, 'UTF-8') ?>">timeout</a>,
+    <a href="<?= htmlspecialchars(buildScenarioUrl('/subscribers', ['listId' => $selectedListId, 'scenario' => 'rate_limit']), ENT_QUOTES, 'UTF-8') ?>">rate limit</a>,
+    <a href="<?= htmlspecialchars(buildScenarioUrl('/subscribers', ['listId' => $selectedListId ?: 'demo-list-3', 'scenario' => 'empty_list']), ENT_QUOTES, 'UTF-8') ?>">empty list</a>
+</p>
 <?php if ($selectedListId !== null): ?>
 <p>Selected list ID: <?= htmlspecialchars($selectedListId, ENT_QUOTES, 'UTF-8') ?></p>
 <form method="get" action="/subscribers">
     <input type="hidden" name="listId" value="<?= htmlspecialchars($selectedListId, ENT_QUOTES, 'UTF-8') ?>">
+    <?php if (getMockScenario() !== null): ?>
+    <input type="hidden" name="scenario" value="<?= htmlspecialchars((string) getMockScenario(), ENT_QUOTES, 'UTF-8') ?>">
+    <?php endif; ?>
     <label for="sort">Sort by</label>
     <select id="sort" name="sort">
         <option value="name"<?= $sortBy === 'name' ? ' selected' : '' ?>>Name</option>
@@ -42,4 +53,4 @@ $emptyMessage = is_string($emptyMessage ?? null) ? $emptyMessage : null;
 <?php else: ?>
 <p>No subscriber data is available right now.</p>
 <?php endif; ?>
-<p><a href="/lists">Back to lists</a></p>
+<p><a href="<?= htmlspecialchars(buildScenarioUrl('/lists'), ENT_QUOTES, 'UTF-8') ?>">Back to lists</a></p>

@@ -111,6 +111,7 @@ function getRuntimeState(): array
     return [
         'appEnv' => getConfigValue('APP_ENV', 'development') ?? 'development',
         'mockModeActive' => isMockModeEnabled(),
+        'activeMockScenario' => getMockScenario(),
         'envCredentialsAvailable' => hasEnvCredentials(),
         'sessionCredentialsAvailable' => hasSessionCredentials(),
         'activeCredentialSource' => resolveCredentialSource(),
@@ -166,10 +167,43 @@ function resolveActiveClientType(): string
     return isMockModeEnabled() ? 'mock' : 'live';
 }
 
+function getMockScenario(): ?string
+{
+    if (!isMockModeEnabled()) {
+        return null;
+    }
+
+    $scenario = strtolower(trim((string) ($_GET['scenario'] ?? '')));
+
+    return in_array($scenario, ['invalid_credentials', 'timeout', 'rate_limit', 'empty_list'], true)
+        ? $scenario
+        : null;
+}
+
+function buildScenarioUrl(string $path, array $query = []): string
+{
+    $scenario = getMockScenario();
+
+    if ($scenario !== null && !array_key_exists('scenario', $query)) {
+        $query['scenario'] = $scenario;
+    }
+
+    $query = array_filter(
+        $query,
+        static fn (mixed $value): bool => $value !== null && $value !== ''
+    );
+
+    if ($query === []) {
+        return $path;
+    }
+
+    return $path . '?' . http_build_query($query);
+}
+
 function resolveSalesAutopilotClient(): SalesAutopilotClientInterface
 {
     if (isMockModeEnabled()) {
-        return new MockSalesAutopilotClient();
+        return new MockSalesAutopilotClient(getMockScenario());
     }
 
     $credentials = getResolvedCredentials();
