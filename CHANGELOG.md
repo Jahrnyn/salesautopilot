@@ -12,3 +12,6 @@
 - What changed: added a narrow `SalesAutopilotClientInterface`, deterministic mock client, conservative live-client skeleton, integration error categories, and a single runtime resolver for the active client type.
 - Why: establish the isolated SalesAutopilot boundary now while keeping endpoint uncertainty contained inside the integration layer.
 - Verified: the runtime can now resolve mock vs live client selection from existing config state, and the Docker Compose configuration remains valid.
+- What changed: wired `/lists` through a small application service that resolves the active SalesAutopilot client, loads list data through the client boundary, and renders either mock-backed lists or a simple error state.
+- Why: move the lists page from a static shell to the intended application flow while keeping the router thin and demonstrable in mock mode.
+- Verified: `/lists` now has a route -> service -> client -> template path in code, controlled integration exceptions are handled without a white screen, and the Docker Compose configuration remains valid.
