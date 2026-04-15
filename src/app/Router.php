@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/Services/ListPageService.php';
+require_once __DIR__ . '/Services/SubscriberPageService.php';
 
 function resolveRoute(string $method, string $path): array
 {
@@ -28,7 +29,10 @@ function resolveRoute(string $method, string $path): array
         '/subscribers' => [
             'title' => 'Subscribers',
             'template' => __DIR__ . '/../templates/subscribers.php',
-            'handler' => null,
+            'handler' => static fn (): array => (new SubscriberPageService())->buildViewModel(
+                isset($_GET['listId']) ? (string) $_GET['listId'] : null,
+                isset($_GET['sort']) ? (string) $_GET['sort'] : 'name',
+            ),
         ],
         default => [
             'title' => 'Page Not Found',

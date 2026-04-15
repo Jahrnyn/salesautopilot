@@ -15,3 +15,6 @@
 - What changed: wired `/lists` through a small application service that resolves the active SalesAutopilot client, loads list data through the client boundary, and renders either mock-backed lists or a simple error state.
 - Why: move the lists page from a static shell to the intended application flow while keeping the router thin and demonstrable in mock mode.
 - Verified: `/lists` now has a route -> service -> client -> template path in code, controlled integration exceptions are handled without a white screen, and the Docker Compose configuration remains valid.
+- What changed: wired `/subscribers` through a small application service, added deterministic mock subscriber data including an empty-list case, and added simple local subscriber sorting by name or email.
+- Why: complete the subscriber flow through the intended application path while keeping the feature demonstrable in mock mode and the sort logic in the application layer.
+- Verified: `/lists` links into `/subscribers`, the subscriber page now renders client-backed data or a simple empty/error state, and the Docker Compose configuration remains valid.

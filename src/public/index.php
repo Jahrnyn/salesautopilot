@@ -25,6 +25,10 @@ header('Content-Type: text/html; charset=UTF-8');
 $title = $page['title'];
 $template = $page['template'];
 $lists = $pageData['lists'] ?? [];
+$selectedListId = $pageData['selectedListId'] ?? null;
+$subscribers = $pageData['subscribers'] ?? [];
+$sortBy = $pageData['sortBy'] ?? 'name';
+$emptyMessage = $pageData['emptyMessage'] ?? null;
 $errorMessage = $pageData['errorMessage'] ?? null;
 
 require __DIR__ . '/../templates/layout.php';

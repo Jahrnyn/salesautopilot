@@ -21,6 +21,12 @@ class MockSalesAutopilotClient implements SalesAutopilotClientInterface
                 'subscriberCount' => 42,
                 'createdAt' => '2024-03-20',
             ],
+            [
+                'id' => 'demo-list-3',
+                'name' => 'Dormant Leads',
+                'subscriberCount' => 0,
+                'createdAt' => '2024-04-05',
+            ],
         ];
     }
 
@@ -55,7 +61,13 @@ class MockSalesAutopilotClient implements SalesAutopilotClientInterface
                     'email' => 'peter@example.test',
                     'name' => 'Peter Nagy',
                 ],
+                [
+                    'id' => 'sub-2003',
+                    'email' => 'adam@example.test',
+                    'name' => 'Adam Varga',
+                ],
             ],
+            'demo-list-3' => [],
         ];
 
         $resolvedListId = $listId === null || $listId === '' ? 'demo-list-1' : (string) $listId;
