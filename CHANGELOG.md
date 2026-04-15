@@ -21,3 +21,6 @@
 - What changed: added a centralized mock scenario switch for invalid credentials, empty list, timeout-like failure, and rate-limit-like failure, and mapped those outcomes to short user-facing messages in the list and subscriber services.
 - Why: make every required exercise error scenario explicitly reproducible without breaking the happy path or exposing raw technical output.
 - Verified: the required scenarios are now selectable in mock mode, empty-list remains a non-error state, and the Docker Compose configuration remains valid.
+- What changed: added a minimal PHPUnit-based test setup with focused service-level checks for list and subscriber happy paths plus the required mock-backed invalid-credentials, empty-list, timeout, and rate-limit scenarios.
+- Why: introduce a small deterministic automated verification layer without adding a broad testing framework or browser-level setup.
+- Verified: test configuration and bootstrap were added for local execution, and the Docker Compose configuration remains valid.
