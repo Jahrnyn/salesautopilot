@@ -27,3 +27,6 @@
 - What changed: added a small shared CSS block and light template markup polish to improve layout width, spacing, navigation, state visibility, and the readability of list/subscriber content.
 - Why: make the server-rendered UI easier to scan without changing application flow or introducing frontend complexity.
 - Verified: the presentation updates stay in the templates/layout only, and the Docker Compose configuration remains valid.
+- What changed: recorded the legacy/basic-auth SalesAutopilot integration decision in the architecture and replaced the live client skeleton with a real built-in PHP HTTP Basic implementation for `GET /getlists` and `GET /list/<nl_id>`.
+- Why: move the live integration path from placeholder code to the validated legacy/basic-auth approach while keeping mock mode and the existing application flow intact.
+- Verified: mock-mode wiring remains unchanged, documented HTTP/auth/timeout failures map into controlled exceptions, and the Docker Compose configuration remains valid.

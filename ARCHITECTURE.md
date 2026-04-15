@@ -361,6 +361,8 @@ At least two implementations should be possible:
 
 1. `SalesAutopilotHttpClient`
    - performs real HTTP calls
+   - for this project uses the legacy HTTP Basic authentication path with the existing username/password pair
+   - does not use JWT or API v2 token flow
 
 2. `MockSalesAutopilotClient`
    - returns deterministic responses
@@ -371,6 +373,24 @@ Endpoint paths, base URL handling, and request construction must be centralized 
 They should not be duplicated across controllers or templates.
 
 This keeps endpoint changes cheap and contained.
+
+### 11.4.1 Validated live integration path for this exercise
+For this implementation, the validated live integration path is the legacy/basic-auth direction only.
+
+Validated decisions for the live client:
+- HTTP Basic authentication is used
+- credentials come from the existing username/password configuration
+- JWT or API v2 token flow is explicitly out of scope
+- `GET /getlists` is used for live list retrieval
+- `GET /list/<nl_id>` is used for live subscriber retrieval
+
+Validated status handling for this slice:
+- `200` means success
+- `401` maps to authentication failure
+- `404`, `405`, `406`, and `500` map to controlled integration/API failure handling
+- response bodies are treated as JSON in UTF-8
+
+No additional endpoint behavior or fields are treated as confirmed beyond these validated points.
 
 ### 11.5 Raw API output vs internal models
 Templates should not consume raw external JSON directly.  
