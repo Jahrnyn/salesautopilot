@@ -2,20 +2,17 @@
 
 declare(strict_types=1);
 
-http_response_code(200);
+require_once __DIR__ . '/../app/Router.php';
+
+$requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+$requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+
+$page = resolveRoute($requestMethod, is_string($requestPath) ? $requestPath : '/');
+
+http_response_code($page['title'] === 'Page Not Found' ? 404 : 200);
 header('Content-Type: text/html; charset=UTF-8');
 
-?><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SalesAutopilot Exercise</title>
-</head>
-<body>
-    <main>
-        <h1>SalesAutopilot Exercise</h1>
-        <p>The PHP runtime shell is up and serving a basic server-rendered page.</p>
-    </main>
-</body>
-</html>
+$title = $page['title'];
+$template = $page['template'];
+
+require __DIR__ . '/../templates/layout.php';
