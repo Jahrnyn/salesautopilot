@@ -6,3 +6,6 @@
 - What changed: added a tiny explicit router, a shared layout with header navigation, and static page shells for `/`, `/lists`, and `/subscribers`.
 - Why: make the SSR bootstrap navigable while keeping routing and rendering structure intentionally small and framework-free.
 - Verified: route-to-template wiring and shared layout usage were checked, and the Docker Compose configuration remains unchanged and valid.
+- What changed: added minimal `.env` loading, session startup, runtime state resolution for mock/env/session credential availability, and a home-page runtime summary; also added `.env.example`.
+- Why: let the app determine configuration and credential source precedence without introducing API behavior or a larger config system.
+- Verified: bootstrap wiring was checked so runtime state loads before rendering, the home page can show config-only status, and the Docker Compose configuration remains valid.
