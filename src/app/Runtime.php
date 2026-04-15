@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/SalesAutopilot/Exceptions.php';
+require_once __DIR__ . '/SalesAutopilot/SalesAutopilotClientInterface.php';
+require_once __DIR__ . '/SalesAutopilot/MockSalesAutopilotClient.php';
+require_once __DIR__ . '/SalesAutopilot/SalesAutopilotHttpClient.php';
+
 function loadEnvironmentConfig(string $projectRoot): void
 {
     $envFile = $projectRoot . '/.env';
@@ -109,5 +114,66 @@ function getRuntimeState(): array
         'envCredentialsAvailable' => hasEnvCredentials(),
         'sessionCredentialsAvailable' => hasSessionCredentials(),
         'activeCredentialSource' => resolveCredentialSource(),
+        'activeClientType' => resolveActiveClientType(),
     ];
+}
+
+function getEnvCredentials(): array
+{
+    return [
+        'username' => getConfigValue('SAPI_USERNAME', '') ?? '',
+        'password' => getConfigValue('SAPI_PASSWORD', '') ?? '',
+        'base_url' => getConfigValue('SAPI_BASE_URL', '') ?? '',
+    ];
+}
+
+function getSessionCredentials(): array
+{
+    if (!isset($_SESSION['manual_credentials']) || !is_array($_SESSION['manual_credentials'])) {
+        return [
+            'username' => '',
+            'password' => '',
+            'base_url' => '',
+        ];
+    }
+
+    return [
+        'username' => trim((string) ($_SESSION['manual_credentials']['username'] ?? '')),
+        'password' => trim((string) ($_SESSION['manual_credentials']['password'] ?? '')),
+        'base_url' => trim((string) ($_SESSION['manual_credentials']['base_url'] ?? '')),
+    ];
+}
+
+function getResolvedCredentials(): array
+{
+    if (isMockModeEnabled()) {
+        return [];
+    }
+
+    if (hasSessionCredentials()) {
+        return getSessionCredentials();
+    }
+
+    if (hasEnvCredentials()) {
+        return getEnvCredentials();
+    }
+
+    return [];
+}
+
+function resolveActiveClientType(): string
+{
+    return isMockModeEnabled() ? 'mock' : 'live';
+}
+
+function resolveSalesAutopilotClient(): SalesAutopilotClientInterface
+{
+    if (isMockModeEnabled()) {
+        return new MockSalesAutopilotClient();
+    }
+
+    $credentials = getResolvedCredentials();
+    $baseUrl = trim((string) ($credentials['base_url'] ?? ''));
+
+    return new SalesAutopilotHttpClient($baseUrl);
 }

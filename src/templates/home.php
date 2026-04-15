@@ -8,6 +8,7 @@ $runtimeState = $runtimeState ?? [
     'envCredentialsAvailable' => false,
     'sessionCredentialsAvailable' => false,
     'activeCredentialSource' => 'none',
+    'activeClientType' => 'mock',
 ];
 
 ?>
@@ -20,6 +21,7 @@ $runtimeState = $runtimeState ?? [
     <li>Env credentials available: <?= $runtimeState['envCredentialsAvailable'] ? 'yes' : 'no' ?></li>
     <li>Manual session credentials available: <?= $runtimeState['sessionCredentialsAvailable'] ? 'yes' : 'no' ?></li>
     <li>Active credential source: <?= htmlspecialchars($runtimeState['activeCredentialSource'], ENT_QUOTES, 'UTF-8') ?></li>
+    <li>Active client type: <?= htmlspecialchars($runtimeState['activeClientType'], ENT_QUOTES, 'UTF-8') ?></li>
 </ul>
 <p>This page reports configuration state only and does not validate credentials with an external API call.</p>
 <p><a href="/lists">Go to lists</a> or <a href="/subscribers">open the subscribers page</a>.</p>
